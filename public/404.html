@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Columbia Notes Hub</title>
+  <link rel="icon" type="image/svg+xml" href="/noteshubatcolumbia/favicon.svg" />
+  <link rel="icon" type="image/x-icon" href="/noteshubatcolumbia/favicon.ico" />
+  <link rel="apple-touch-icon" href="/noteshubatcolumbia/favicon.svg" />
+  <link rel="shortcut icon" href="/noteshubatcolumbia/favicon.ico" />
+  <script type="text/javascript">
+    // Redirect to the home page with hash routing
+    // This handles GitHub Pages 404 errors by redirecting to the main page
+    
+    // Get the current path
+    var path = window.location.pathname;
+    
+    // Extract the route (remove the base path)
+    var route = path.replace('/noteshubatcolumbia', '').replace(/^\//, '');
+    
+    // Redirect to the home page with the appropriate hash route
+    if (route === 'browse' || path.includes('/browse')) {
+      window.location.replace('/noteshubatcolumbia/#/browse');
+    } else if (route === 'upload' || path.includes('/upload')) {
+      window.location.replace('/noteshubatcolumbia/#/upload');
+    } else {
+      // Default to home page
+      window.location.replace('/noteshubatcolumbia/');
+    }
+  </script>
+  <!-- Fallback meta refresh -->
+  <meta http-equiv="refresh" content="0; URL=/noteshubatcolumbia/">
+  <link rel="canonical" href="/noteshubatcolumbia/">
+</head>
+<body>
+  <p>Redirecting to <a href="/noteshubatcolumbia/">Columbia Notes Hub</a>...</p>
+</body>
+</html>
