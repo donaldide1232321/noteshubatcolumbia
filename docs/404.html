@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <title>Columbia Notes Hub</title>
+  <link rel="icon" type="image/svg+xml" href="/noteshubatcolumbia/favicon.svg" />
   <script type="text/javascript">
     // Redirect to the home page with hash routing
     // This handles GitHub Pages 404 errors by redirecting to the main page
@@ -13,18 +14,32 @@
     // Extract the route (remove the base path)
     var route = path.replace('/noteshubatcolumbia', '').replace(/^\//, '');
     
+    // Check if we're on a custom domain
+    var isCustomDomain = window.location.hostname !== 'lovable-dev.github.io';
+    
+    // Base path depends on whether we're on a custom domain
+    var basePath = isCustomDomain ? '/' : '/noteshubatcolumbia/';
+    
     // Redirect to the home page with the appropriate hash route
-    if (route === 'browse') {
-      window.location.href = '/noteshubatcolumbia/#/browse';
-    } else if (route === 'upload') {
-      window.location.href = '/noteshubatcolumbia/#/upload';
+    if (route === 'browse' || path.includes('/browse')) {
+      window.location.replace(basePath + '#/browse');
+    } else if (route === 'upload' || path.includes('/upload')) {
+      window.location.replace(basePath + '#/upload');
     } else {
       // Default to home page
-      window.location.href = '/noteshubatcolumbia/';
+      window.location.replace(basePath);
     }
+  </script>
+  <!-- Fallback meta refresh will be set dynamically -->
+  <script>
+    document.write('<meta http-equiv="refresh" content="0; URL=' + (window.location.hostname !== 'lovable-dev.github.io' ? '/' : '/noteshubatcolumbia/') + '">');
+    document.write('<link rel="canonical" href="' + (window.location.hostname !== 'lovable-dev.github.io' ? '/' : '/noteshubatcolumbia/') + '">');
   </script>
 </head>
 <body>
-  <p>Redirecting to home page...</p>
+  <p>Redirecting to <a href="/" id="redirect-link">Columbia Notes Hub</a>...</p>
+  <script>
+    document.getElementById('redirect-link').href = window.location.hostname !== 'lovable-dev.github.io' ? '/' : '/noteshubatcolumbia/';
+  </script>
 </body>
 </html>

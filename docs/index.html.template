@@ -50,7 +50,7 @@
         }
       })();
     </script>
-  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">\n<link rel="stylesheet" crossorigin href="/noteshubatcolumbia/assets/index-zmSie2WR.css">\n<link rel="modulepreload" crossorigin href="/noteshubatcolumbia/assets/react-vendor-tZaoBF2e.js">\n<link rel="modulepreload" crossorigin href="/noteshubatcolumbia/assets/ui-vendor-D7pk14tK.js">\n<script src="/noteshubatcolumbia/index.js"></script>\n<script type="module" crossorigin src="/noteshubatcolumbia/assets/index-Dy-UR5zC.js"></script>\n</head>
+  </head>
   <body>
     <div id="root"></div>
   </body>
