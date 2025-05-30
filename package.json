@@ -4,11 +4,12 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --open",
     "build": "vite build",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview --open",
+    "postbuild": "cp -f public/_redirects public/.htaccess public/netlify.toml public/web.config public/vercel.json dist/ || true"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",

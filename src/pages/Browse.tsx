@@ -39,24 +39,92 @@ const Browse = () => {
   const [filteredUploads, setFilteredUploads] = useState<Upload[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [userVotes, setUserVotes] = useState<Record<string, 'up' | 'down'>>({});
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     fetchUploads();
     fetchUserVotes();
+
+    // Set up real-time subscription
+    const uploadsSubscription = supabase
+      .channel('uploads-changes')
+      .on('postgres_changes', 
+        { 
+          event: '*', 
+          schema: 'public', 
+          table: 'uploads' 
+        }, 
+        (payload) => {
+          console.log('Real-time update:', payload);
+          fetchUploads(); // Refresh the uploads list
+        }
+      )
+      .subscribe();
+
+    return () => {
+      // Clean up subscription
+      supabase.removeChannel(uploadsSubscription);
+    };
   }, []);
 
   const fetchUploads = async () => {
     try {
+      setIsLoading(true);
+      setError(null);
+      
       const { data, error } = await supabase
         .from('uploads')
         .select('*')
         .order('upload_date', { ascending: false });
 
-      if (error) throw error;
-      setUploads(data || []);
-      setFilteredUploads(data || []);
+      if (error) {
+        throw error;
+      }
+
+      // Filter out any null or undefined entries
+      const validUploads = (data || []).filter(upload => 
+        upload && upload.id && upload.file_url && upload.file_name
+      );
+
+      // Check if files exist in storage and collect IDs of missing files
+      const [existingUploads, missingFileIds] = await validUploads.reduce(async (promiseAcc, upload) => {
+        const [existing, missing] = await promiseAcc;
+        const { data } = await supabase
+          .storage
+          .from('uploads')
+          .list(upload.file_url.split('/')[0], {
+            search: upload.file_url.split('/')[1]
+          });
+        
+        if (data && data.length > 0) {
+          return [[...existing, upload], missing];
+        } else {
+          return [existing, [...missing, upload.id]];
+        }
+      }, Promise.resolve([[] as Upload[], [] as string[]]));
+
+      // Clean up database records for missing files
+      if (missingFileIds.length > 0) {
+        console.log('Cleaning up missing files:', missingFileIds);
+        await supabase
+          .from('uploads')
+          .delete()
+          .in('id', missingFileIds);
+      }
+
+      setUploads(existingUploads);
+      setFilteredUploads(existingUploads);
     } catch (error) {
       console.error('Error fetching uploads:', error);
+      setError('Failed to load study materials. Please try again later.');
+      toast({ 
+        title: "Error loading materials", 
+        description: "Please refresh the page or try again later.", 
+        variant: "destructive" 
+      });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -247,6 +315,40 @@ const Browse = () => {
     return colors[fileType as keyof typeof colors] || 'bg-gray-100 text-gray-800';
   };
 
+  if (error) {
+    return (
+      <div className="min-h-screen bg-white flex flex-col">
+        <header className="border-b border-gray-200 bg-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex justify-between items-center h-16">
+              <div className="flex items-center">
+                <div className="w-10 h-10 bg-columbia-blue rounded-lg flex items-center justify-center text-xl text-white">
+                  ✏️
+                </div>
+                <h1 className="ml-3 text-xl font-bold text-gray-900">NotesHub @Columbia</h1>
+              </div>
+              <div className="flex space-x-3">
+                <Button variant="outline" onClick={() => navigate('/upload')}>
+                  Upload
+                </Button>
+                <Button variant="outline" onClick={() => navigate('/')}>
+                  Home
+                </Button>
+              </div>
+            </div>
+          </div>
+        </header>
+        <main className="flex-grow flex items-center justify-center">
+          <div className="text-center">
+            <div className="mb-4 text-red-500">⚠️</div>
+            <h2 className="text-2xl font-semibold text-gray-900 mb-2">{error}</h2>
+            <Button onClick={fetchUploads}>Try Again</Button>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-white flex flex-col">
       <header className="border-b border-gray-200 bg-white">
@@ -290,7 +392,12 @@ const Browse = () => {
 
         {/* Main Content */}
         <div>
-          {filteredUploads.length === 0 ? (
+          {isLoading ? (
+            <div className="text-center py-12">
+              <div className="animate-spin inline-block w-8 h-8 border-4 border-current border-t-transparent text-columbia-blue rounded-full" />
+              <p className="mt-4 text-gray-600">Loading study materials...</p>
+            </div>
+          ) : filteredUploads.length === 0 ? (
             <div className="text-center py-12">
               <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl">📚</span>
