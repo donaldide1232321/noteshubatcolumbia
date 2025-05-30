@@ -1,63 +1,75 @@
 <!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <title>Columbia Notes Hub</title>
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-  
-  <!-- HTML Meta Tags -->
-  <title>NotesHub @Columbia</title>
-  <meta name="description" content="Share and discover academic materials at Columbia University">
-  
-  <!-- Facebook Meta Tags -->
-  <meta property="og:url" content="https://noteshubcolumbia.com/">
-  <meta property="og:type" content="website">
-  <meta property="og:title" content="NotesHub @Columbia">
-  <meta property="og:description" content="Share and discover academic materials at Columbia University">
-  <meta property="og:image" content="https://ik.imagekit.io/1qqkcce6i/image.png?updatedAt=1748646512381">
-  
-  <!-- Twitter Meta Tags -->
-  <meta name="twitter:card" content="summary_large_image">
-  <meta property="twitter:url" content="https://noteshubcolumbia.com/">
-  <meta name="twitter:title" content="website">
-  <meta name="twitter:description" content="Share and discover academic materials at Columbia University">
-  <meta name="twitter:image" content="https://ik.imagekit.io/1qqkcce6i/image.png?updatedAt=1748646512381">
-  <script type="text/javascript">
-    // Redirect to the home page with hash routing
-    // This handles GitHub Pages 404 errors by redirecting to the main page
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/favicon.svg" />
+    <title>NotesHub @Columbia</title>
+    <meta name="description" content="Share and discover academic materials at Columbia University" />
+    <meta name="author" content="NotesHub" />
     
-    // Get the current path
-    var path = window.location.pathname;
+    <!-- HTML Meta Tags -->
+    <title>NotesHub @Columbia</title>
+    <meta name="description" content="Share and discover academic materials at Columbia University">
     
-    // Extract the route (remove the base path)
-    var route = path.replace('/noteshubatcolumbia', '').replace(/^\//, '');
+    <!-- Facebook Meta Tags -->
+    <meta property="og:url" content="https://noteshubcolumbia.com/">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="NotesHub @Columbia">
+    <meta property="og:description" content="Share and discover academic materials at Columbia University">
+    <meta property="og:image" content="https://ik.imagekit.io/1qqkcce6i/image.png?updatedAt=1748646512381">
     
-    // Check if we're on a custom domain
-    var isCustomDomain = window.location.hostname !== 'lovable-dev.github.io';
+    <!-- Twitter Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://noteshubcolumbia.com/">
+    <meta name="twitter:title" content="website">
+    <meta name="twitter:description" content="Share and discover academic materials at Columbia University">
+    <meta name="twitter:image" content="https://ik.imagekit.io/1qqkcce6i/image.png?updatedAt=1748646512381">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
     
-    // Base path depends on whether we're on a custom domain
-    var basePath = isCustomDomain ? '/' : '/noteshubatcolumbia/';
+    <meta property="og:title" content="NotesHub @Columbia" />
+    <meta property="og:description" content="Share and discover academic materials at Columbia University" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@lovable_dev" />
+    <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
     
-    // Redirect to the home page with the appropriate hash route
-    if (route === 'browse' || path.includes('/browse')) {
-      window.location.replace(basePath + '#/browse');
-    } else if (route === 'upload' || path.includes('/upload')) {
-      window.location.replace(basePath + '#/upload');
-    } else {
-      // Default to home page
-      window.location.replace(basePath);
-    }
-  </script>
-  <!-- Fallback meta refresh will be set dynamically -->
-  <script>
-    document.write('<meta http-equiv="refresh" content="0; URL=' + (window.location.hostname !== 'lovable-dev.github.io' ? '/' : '/noteshubatcolumbia/') + '">');
-    document.write('<link rel="canonical" href="' + (window.location.hostname !== 'lovable-dev.github.io' ? '/' : '/noteshubatcolumbia/') + '">');
-  </script>
-</head>
-<body>
-  <p>Redirecting to <a href="/" id="redirect-link">Columbia Notes Hub</a>...</p>
-  <script>
-    document.getElementById('redirect-link').href = window.location.hostname !== 'lovable-dev.github.io' ? '/' : '/noteshubatcolumbia/';
-  </script>
-</body>
+    <!-- Hash router script for GitHub Pages -->
+    <script type="text/javascript">
+      // This script helps with hash-based routing for GitHub Pages
+      // It ensures that direct navigation to routes works correctly and handles page refreshes
+      
+      (function() {
+        // Get the current path and hash
+        var path = window.location.pathname;
+        var hash = window.location.hash;
+        
+        // If we have a hash route already, we're good
+        if (hash.startsWith('#/')) {
+          return;
+        }
+        
+        // Check if we're on a custom domain
+        var isCustomDomain = window.location.hostname !== 'lovable-dev.github.io';
+        
+        // Base path depends on whether we're on a custom domain
+        var basePath = isCustomDomain ? '/' : '/noteshubatcolumbia/';
+        
+        // Check for specific routes in the path
+        if (path.includes('/browse')) {
+          window.location.replace(basePath + '#/browse');
+        } else if (path.includes('/upload')) {
+          window.location.replace(basePath + '#/upload');
+        }
+      })();
+    </script>
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">\n<link rel="stylesheet" crossorigin href="/assets/index-zmSie2WR.css">\n<link rel="modulepreload" crossorigin href="/assets/react-vendor-tZaoBF2e.js">\n<link rel="modulepreload" crossorigin href="/assets/ui-vendor-D7pk14tK.js">\n<script src="/index.js"></script>\n<script type="module" crossorigin src="/assets/index-Dy-UR5zC.js"></script>\n</head>
+  <body>
+    <div id="root"></div>
+  </body>
 </html>
