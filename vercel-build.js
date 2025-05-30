@@ -13,14 +13,6 @@ const config = {
   version: 3,
   routes: [
     {
-      src: "/browse",
-      dest: "/index.html"
-    },
-    {
-      src: "/upload",
-      dest: "/index.html"
-    },
-    {
       handle: "filesystem"
     },
     {
@@ -32,3 +24,15 @@ const config = {
 
 fs.writeFileSync(configPath, JSON.stringify(config, null, 2));
 console.log('Created Vercel config at', configPath);
+
+// Copy index.html to 404.html
+const distDir = path.join(__dirname, 'dist');
+const indexPath = path.join(distDir, 'index.html');
+const notFoundPath = path.join(distDir, '404.html');
+
+if (fs.existsSync(indexPath)) {
+  fs.copyFileSync(indexPath, notFoundPath);
+  console.log('Copied index.html to 404.html');
+} else {
+  console.error('Could not find index.html in dist directory');
+}
