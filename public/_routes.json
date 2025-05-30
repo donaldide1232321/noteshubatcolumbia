@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "routes": [
+    {
+      "src": "/browse",
+      "dest": "/"
+    },
+    {
+      "src": "/upload",
+      "dest": "/"
+    },
+    {
+      "handle": "filesystem"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/"
+    }
+  ]
+}

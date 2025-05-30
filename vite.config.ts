@@ -48,7 +48,9 @@ export default defineConfig(({ mode }: { mode: string }) => ({
           '.htaccess',
           'netlify.toml',
           'web.config',
-          'vercel.json'
+          'vercel.json',
+          '_routes.json',
+          'spa-redirect.js'
         ];
         
         redirectFiles.forEach(file => {

@@ -1,0 +1,9 @@
+{
+  "version": 3,
+  "routes": [
+    { "handle": "filesystem" },
+    { "src": "/browse", "dest": "/index.html" },
+    { "src": "/upload", "dest": "/index.html" },
+    { "src": "/(.*)", "dest": "/index.html" }
+  ]
+}

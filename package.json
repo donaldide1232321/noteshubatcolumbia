@@ -9,7 +9,7 @@
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
     "preview": "vite preview --open",
-    "postbuild": "cp -f public/_redirects public/.htaccess public/netlify.toml public/web.config public/vercel.json dist/ || true"
+    "postbuild": "cp -f public/_redirects public/.htaccess public/netlify.toml public/web.config public/vercel.json public/_routes.json public/spa-redirect.js dist/ || true"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
