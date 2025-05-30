@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/noteshubatcolumbia/favicon.svg" />
+    <link rel="icon" type="image/x-icon" href="/noteshubatcolumbia/favicon.ico" />
+    <link rel="apple-touch-icon" href="/noteshubatcolumbia/favicon.svg" />
+    <link rel="shortcut icon" href="/noteshubatcolumbia/favicon.ico" />
+    <title>NotesHub @Columbia</title>
+    <meta name="description" content="Share and discover academic materials at Columbia University" />
+    <meta name="author" content="NotesHub" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
+    
+    <meta property="og:title" content="NotesHub @Columbia" />
+    <meta property="og:description" content="Share and discover academic materials at Columbia University" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@lovable_dev" />
+    <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+    
+    <!-- Hash router script for GitHub Pages -->
+    <script type="text/javascript">
+      // This script helps with hash-based routing for GitHub Pages
+      // It ensures that direct navigation to routes works correctly and handles page refreshes
+      
+      (function() {
+        // Get the current path and hash
+        var path = window.location.pathname;
+        var hash = window.location.hash;
+        
+        // If we have a hash route already, we're good
+        if (hash.startsWith('#/')) {
+          return;
+        }
+        
+        // Check for specific routes in the path
+        if (path.includes('/browse')) {
+          window.location.replace('/noteshubatcolumbia/#/browse');
+        } else if (path.includes('/upload')) {
+          window.location.replace('/noteshubatcolumbia/#/upload');
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
