@@ -1,33 +1,59 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="apple-touch-icon" href="/favicon.svg" />
-    <title>NotesHub @Columbia</title>
-    <meta name="description" content="Share and discover academic materials at Columbia University" />
-    <meta name="author" content="NotesHub" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
-    <script src="/index.js"></script>
-
-    <meta property="og:title" content="NotesHub @Columbia" />
-    <meta property="og:description" content="Share and discover academic materials at Columbia University" />
-    <meta property="og:type" content="website" />
-    <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
-
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@lovable_dev" />
-    <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
-    <script type="module" crossorigin src="/assets/index-DepUMgQa.js"></script>
-    <link rel="modulepreload" crossorigin href="/assets/react-vendor-D_gWPCCY.js">
-    <link rel="modulepreload" crossorigin href="/assets/ui-vendor-CqWVxmlm.js">
-    <link rel="stylesheet" crossorigin href="/assets/index-zmSie2WR.css">
-  </head>
-
-  <body>
-    <div id="root"></div>
-  </body>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Columbia Notes Hub</title>
+  <link rel="icon" type="image/svg+xml" href="/noteshubatcolumbia/favicon.svg" />
+  
+  <!-- Open Graph / Facebook Meta Tags -->
+  <meta property="og:url" content="https://noteshubcolumbia.com/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="NotesHub @Columbia" />
+  <meta property="og:description" content="Share and discover academic materials at Columbia University" />
+  <meta property="og:image" content="https://ik.imagekit.io/1qqkcce6i/image.png?updatedAt=1748646512381" />
+  
+  <!-- Twitter Meta Tags -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta property="twitter:url" content="https://noteshubcolumbia.com/" />
+  <meta name="twitter:title" content="NotesHub @Columbia" />
+  <meta name="twitter:description" content="Share and discover academic materials at Columbia University" />
+  <meta name="twitter:image" content="https://ik.imagekit.io/1qqkcce6i/image.png?updatedAt=1748646512381" />
+  <script type="text/javascript">
+    // Redirect to the home page with hash routing
+    // This handles GitHub Pages 404 errors by redirecting to the main page
+    
+    // Get the current path
+    var path = window.location.pathname;
+    
+    // Extract the route (remove the base path)
+    var route = path.replace('/noteshubatcolumbia', '').replace(/^\//, '');
+    
+    // Check if we're on a custom domain
+    var isCustomDomain = window.location.hostname !== 'lovable-dev.github.io';
+    
+    // Base path depends on whether we're on a custom domain
+    var basePath = isCustomDomain ? '/' : '/noteshubatcolumbia/';
+    
+    // Redirect to the home page with the appropriate hash route
+    if (route === 'browse' || path.includes('/browse')) {
+      window.location.replace(basePath + '#/browse');
+    } else if (route === 'upload' || path.includes('/upload')) {
+      window.location.replace(basePath + '#/upload');
+    } else {
+      // Default to home page
+      window.location.replace(basePath);
+    }
+  </script>
+  <!-- Fallback meta refresh will be set dynamically -->
+  <script>
+    document.write('<meta http-equiv="refresh" content="0; URL=' + (window.location.hostname !== 'lovable-dev.github.io' ? '/' : '/noteshubatcolumbia/') + '">');
+    document.write('<link rel="canonical" href="' + (window.location.hostname !== 'lovable-dev.github.io' ? '/' : '/noteshubatcolumbia/') + '">');
+  </script>
+</head>
+<body>
+  <p>Redirecting to <a href="/" id="redirect-link">Columbia Notes Hub</a>...</p>
+  <script>
+    document.getElementById('redirect-link').href = window.location.hostname !== 'lovable-dev.github.io' ? '/' : '/noteshubatcolumbia/';
+  </script>
+</body>
 </html>
