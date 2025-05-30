@@ -1,18 +1,5 @@
 {
-  "version": 2,
-  "cleanUrls": true,
-  "trailingSlash": false,
   "rewrites": [
-    { "source": "/browse", "destination": "/" },
-    { "source": "/upload", "destination": "/" },
-    { "source": "/(.*)", "destination": "/" }
-  ],
-  "routes": [
-    { "handle": "filesystem" },
-    { "src": "/browse", "dest": "/" },
-    { "src": "/upload", "dest": "/" },
-    { "src": "/(.*)", "dest": "/" }
-  ],
-  "buildCommand": "npm run build",
-  "outputDirectory": "dist"
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
 }
