@@ -9,7 +9,7 @@
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
     "preview": "vite preview --open",
-    "postbuild": "cp -f public/_redirects public/.htaccess public/netlify.toml public/web.config public/vercel.json public/404.html public/index.js dist/ || true",
+    "postbuild": "cp -f public/_redirects public/.htaccess public/netlify.toml public/web.config public/vercel.json dist/ || true && cp dist/index.html dist/404.html",
     "vercel-build": "vite build && node vercel-build.js"
   },
   "dependencies": {
