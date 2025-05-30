@@ -1,33 +1,33 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="apple-touch-icon" href="/favicon.svg" />
-    <title>NotesHub @Columbia</title>
-    <meta name="description" content="Share and discover academic materials at Columbia University" />
-    <meta name="author" content="NotesHub" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
-    <script src="/index.js"></script>
-
-    <meta property="og:title" content="NotesHub @Columbia" />
-    <meta property="og:description" content="Share and discover academic materials at Columbia University" />
-    <meta property="og:type" content="website" />
-    <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
-
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@lovable_dev" />
-    <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
-    <script type="module" crossorigin src="/assets/index-UJBK60Es.js"></script>
-    <link rel="modulepreload" crossorigin href="/assets/react-vendor-D_gWPCCY.js">
-    <link rel="modulepreload" crossorigin href="/assets/ui-vendor-CqWVxmlm.js">
-    <link rel="stylesheet" crossorigin href="/assets/index-zmSie2WR.css">
-  </head>
-
-  <body>
-    <div id="root"></div>
-  </body>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Columbia Notes Hub</title>
+  <script type="text/javascript">
+    // Redirect to the home page with hash routing
+    // This handles GitHub Pages 404 errors by redirecting to the main page
+    
+    // Get the current path
+    var path = window.location.pathname;
+    
+    // Extract the route (remove the base path)
+    var route = path.replace('/noteshubatcolumbia', '').replace(/^\//, '');
+    
+    // Redirect to the home page with the appropriate hash route
+    if (route === 'browse' || path.includes('/browse')) {
+      window.location.replace('/noteshubatcolumbia/#/browse');
+    } else if (route === 'upload' || path.includes('/upload')) {
+      window.location.replace('/noteshubatcolumbia/#/upload');
+    } else {
+      // Default to home page
+      window.location.replace('/noteshubatcolumbia/');
+    }
+  </script>
+  <!-- Fallback meta refresh -->
+  <meta http-equiv="refresh" content="0; URL=/noteshubatcolumbia/">
+  <link rel="canonical" href="/noteshubatcolumbia/">
+</head>
+<body>
+  <p>Redirecting to <a href="/noteshubatcolumbia/">Columbia Notes Hub</a>...</p>
+</body>
 </html>

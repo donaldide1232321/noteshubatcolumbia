@@ -3,16 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="apple-touch-icon" href="/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href="/noteshubatcolumbia/favicon.svg" />
+    <link rel="apple-touch-icon" href="/noteshubatcolumbia/favicon.svg" />
     <title>NotesHub @Columbia</title>
     <meta name="description" content="Share and discover academic materials at Columbia University" />
     <meta name="author" content="NotesHub" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
-    <script src="/index.js"></script>
-
+    
     <meta property="og:title" content="NotesHub @Columbia" />
     <meta property="og:description" content="Share and discover academic materials at Columbia University" />
     <meta property="og:type" content="website" />
@@ -21,12 +20,31 @@
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@lovable_dev" />
     <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
-    <script type="module" crossorigin src="/assets/index-UJBK60Es.js"></script>
-    <link rel="modulepreload" crossorigin href="/assets/react-vendor-D_gWPCCY.js">
-    <link rel="modulepreload" crossorigin href="/assets/ui-vendor-CqWVxmlm.js">
-    <link rel="stylesheet" crossorigin href="/assets/index-zmSie2WR.css">
-  </head>
-
+    
+    <!-- Hash router script for GitHub Pages -->
+    <script type="text/javascript">
+      // This script helps with hash-based routing for GitHub Pages
+      // It ensures that direct navigation to routes works correctly and handles page refreshes
+      
+      (function() {
+        // Get the current path and hash
+        var path = window.location.pathname;
+        var hash = window.location.hash;
+        
+        // If we have a hash route already, we're good
+        if (hash.startsWith('#/')) {
+          return;
+        }
+        
+        // Check for specific routes in the path
+        if (path.includes('/browse')) {
+          window.location.replace('/noteshubatcolumbia/#/browse');
+        } else if (path.includes('/upload')) {
+          window.location.replace('/noteshubatcolumbia/#/upload');
+        }
+      })();
+    </script>
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">\n<link rel="stylesheet" crossorigin href="/noteshubatcolumbia/assets/index-zmSie2WR.css">\n<link rel="modulepreload" crossorigin href="/noteshubatcolumbia/assets/react-vendor-tZaoBF2e.js">\n<link rel="modulepreload" crossorigin href="/noteshubatcolumbia/assets/ui-vendor-D7pk14tK.js">\n<script src="/noteshubatcolumbia/index.js"></script>\n<script type="module" crossorigin src="/noteshubatcolumbia/assets/index-5G-IUlO6.js"></script>\n</head>
   <body>
     <div id="root"></div>
   </body>
