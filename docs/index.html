@@ -21,11 +21,30 @@
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@lovable_dev" />
     <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
-    <script type="module" crossorigin src="/assets/index-DepUMgQa.js"></script>
-    <link rel="modulepreload" crossorigin href="/assets/react-vendor-D_gWPCCY.js">
-    <link rel="modulepreload" crossorigin href="/assets/ui-vendor-CqWVxmlm.js">
-    <link rel="stylesheet" crossorigin href="/assets/index-zmSie2WR.css">
-  </head>
+    <script type="module" crossorigin src="/noteshubatcolumbia/assets/index-5G-IUlO6.js"></script>
+    <link rel="modulepreload" crossorigin href="/noteshubatcolumbia/assets/react-vendor-tZaoBF2e.js">
+    <link rel="modulepreload" crossorigin href="/noteshubatcolumbia/assets/ui-vendor-D7pk14tK.js">
+    <link rel="stylesheet" crossorigin href="/noteshubatcolumbia/assets/index-zmSie2WR.css">
+  <script type="text/javascript">// This script helps with hash-based routing for GitHub Pages
+// It ensures that direct navigation to routes works correctly and handles page refreshes
+
+(function() {
+  // Get the current path and hash
+  var path = window.location.pathname;
+  var hash = window.location.hash;
+  
+  // If we have a hash route already, we're good
+  if (hash.startsWith('#/')) {
+    return;
+  }
+  
+  // Check for specific routes in the path
+  if (path.includes('/browse')) {
+    window.location.replace('/noteshubatcolumbia/#/browse');
+  } else if (path.includes('/upload')) {
+    window.location.replace('/noteshubatcolumbia/#/upload');
+  }
+})();</script></head>
 
   <body>
     <div id="root"></div>
