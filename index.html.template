@@ -4,7 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/noteshubatcolumbia/favicon.svg" />
+    <link rel="icon" type="image/x-icon" href="/noteshubatcolumbia/favicon.ico" />
     <link rel="apple-touch-icon" href="/noteshubatcolumbia/favicon.svg" />
+    <link rel="shortcut icon" href="/noteshubatcolumbia/favicon.ico" />
     <title>NotesHub @Columbia</title>
     <meta name="description" content="Share and discover academic materials at Columbia University" />
     <meta name="author" content="NotesHub" />
