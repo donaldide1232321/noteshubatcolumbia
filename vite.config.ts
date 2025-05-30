@@ -49,8 +49,7 @@ export default defineConfig(({ mode }: { mode: string }) => ({
           'netlify.toml',
           'web.config',
           'vercel.json',
-          '_routes.json',
-          'route-fix.js',
+          'index.js',
           '404.html'
         ];
         
