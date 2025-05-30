@@ -50,7 +50,8 @@ export default defineConfig(({ mode }: { mode: string }) => ({
           'web.config',
           'vercel.json',
           '_routes.json',
-          'spa-redirect.js'
+          'route-fix.js',
+          '404.html'
         ];
         
         redirectFiles.forEach(file => {
