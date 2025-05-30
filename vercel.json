@@ -1,5 +1,15 @@
 {
   "rewrites": [
+    { "source": "/upload", "destination": "/index.html" },
+    { "source": "/browse", "destination": "/index.html" },
     { "source": "/(.*)", "destination": "/index.html" }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "s-maxage=0" }
+      ]
+    }
   ]
 }
