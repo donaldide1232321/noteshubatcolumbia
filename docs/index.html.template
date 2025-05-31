@@ -3,41 +3,14 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="apple-touch-icon" href="/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href="/noteshubatcolumbia/favicon.svg" />
+    <link rel="apple-touch-icon" href="/noteshubatcolumbia/favicon.svg" />
     <title>NotesHub @Columbia</title>
     <meta name="description" content="Share and discover academic materials at Columbia University" />
     <meta name="author" content="NotesHub" />
-    
-    <!-- HTML Meta Tags -->
-    <title>NotesHub @Columbia</title>
-    <meta name="description" content="Share and discover academic materials at Columbia University">
-    
-    <!-- Facebook Meta Tags -->
-    <meta property="og:url" content="https://noteshubcolumbia.com/">
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="NotesHub @Columbia">
-    <meta property="og:description" content="Share and discover academic materials at Columbia University">
-    <meta property="og:image" content="https://ik.imagekit.io/1qqkcce6i/image.png?updatedAt=1748646512381">
-    
-    <!-- Twitter Meta Tags -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://noteshubcolumbia.com/">
-    <meta name="twitter:title" content="website">
-    <meta name="twitter:description" content="Share and discover academic materials at Columbia University">
-    <meta name="twitter:image" content="https://ik.imagekit.io/1qqkcce6i/image.png?updatedAt=1748646512381">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
-    
-    <meta property="og:title" content="NotesHub @Columbia" />
-    <meta property="og:description" content="Share and discover academic materials at Columbia University" />
-    <meta property="og:type" content="website" />
-    <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
-
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@lovable_dev" />
-    <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
     
     <!-- Hash router script for GitHub Pages -->
     <script type="text/javascript">
