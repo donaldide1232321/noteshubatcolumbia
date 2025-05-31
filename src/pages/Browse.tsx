@@ -114,11 +114,12 @@ const Browse = () => {
       const from = page * PAGE_SIZE;
       const to = from + PAGE_SIZE - 1;
       
-      // Build query
+      // Build query with pagination applied first
       let query = supabase
         .from('uploads')
         .select('*')
-        .order('upload_date', { ascending: false });
+        .order('upload_date', { ascending: false })
+        .range(from, to);  // Apply pagination range
       
       // Add search filters if needed
       if (searchTerm) {
@@ -127,8 +128,8 @@ const Browse = () => {
         );
       }
       
-      // Apply pagination
-      const { data, error } = await query.range(from, to);
+      // Execute the query
+      const { data, error } = await query;
       
       console.log(
         ` → Supabase query for range ${from}–${to} returned`, 
