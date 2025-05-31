@@ -183,7 +183,10 @@ const Browse = () => {
   };
 
   const fetchUserVotes = async () => {
-    if (!user) return;
+    // Don't query Supabase if there's no logged-in user or if user.id is "default-user"
+    if (!user || user.id === 'default-user') {
+      return;
+    }
     
     try {
       const { data, error } = await supabase
