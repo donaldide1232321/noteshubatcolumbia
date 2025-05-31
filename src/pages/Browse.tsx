@@ -92,7 +92,7 @@ const Browse = () => {
   }, [page, searchTerm]);
 
   const fetchUploads = async () => {
-    console.log(`▶️ fetchUploads() called (page=${page}, searchTerm="${searchTerm}")`);
+    console.log(`🔍 fetchUploads called (searchTerm="${searchTerm}", page=${page})`);
     try {
       setIsLoading(true);
       setError(null);
@@ -116,12 +116,17 @@ const Browse = () => {
       
       // Apply pagination
       const { data, error } = await query.range(from, to);
+      
+      console.log(
+        ` → Supabase query for range ${from}–${to} returned`, 
+        data?.length, 
+        'row(s):', 
+        data
+      );
 
       if (error) {
         throw error;
       }
-
-      console.log(`   📬 Supabase returned ${data?.length ?? 0} rows for range ${from}–${to}`);
 
       // Filter out any null or undefined entries
       const validUploads = (data || []).filter(upload => 
@@ -157,8 +162,6 @@ const Browse = () => {
           .in('id', missingFileIds);
       }
 
-      console.log(`   🧹 After storage‐check, ${existingUploads.length} valid uploads`);
-
       // Append new uploads to existing ones
       setUploads(prev => [...prev, ...existingUploads]);
       
@@ -167,7 +170,7 @@ const Browse = () => {
       setHasMore(newHasMore);
       
       console.log(
-        `   📈 Total uploads now: ${uploads.length + existingUploads.length}, hasMore=${newHasMore}`
+        ` → After page ${page}: totalUploads=${uploads.length + existingUploads.length}, hasMore=${newHasMore}`
       );
     } catch (error) {
       console.error('Error fetching uploads:', error);
