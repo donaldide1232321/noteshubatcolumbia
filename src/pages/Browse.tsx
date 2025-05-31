@@ -47,6 +47,8 @@ const Browse = () => {
   // Pagination state
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
+  
+  console.log('🏁 Browse component mounted (page:', page, 'searchTerm:', searchTerm, ')');
 
   // Set up real-time subscription and fetch user votes
   useEffect(() => {
@@ -90,6 +92,7 @@ const Browse = () => {
   }, [page, searchTerm]);
 
   const fetchUploads = async () => {
+    console.log(`▶️ fetchUploads() called (page=${page}, searchTerm="${searchTerm}")`);
     try {
       setIsLoading(true);
       setError(null);
@@ -117,6 +120,8 @@ const Browse = () => {
       if (error) {
         throw error;
       }
+
+      console.log(`   📬 Supabase returned ${data?.length ?? 0} rows for range ${from}–${to}`);
 
       // Filter out any null or undefined entries
       const validUploads = (data || []).filter(upload => 
@@ -152,10 +157,7 @@ const Browse = () => {
           .in('id', missingFileIds);
       }
 
-      // ⚡ **INSERT THIS LOG** ⚡
-      console.log(
-        `Fetched page ${page}: returned ${existingUploads.length} rows (PAGE_SIZE=${PAGE_SIZE})`
-      );
+      console.log(`   🧹 After storage‐check, ${existingUploads.length} valid uploads`);
 
       // Append new uploads to existing ones
       setUploads(prev => [...prev, ...existingUploads]);
@@ -164,9 +166,8 @@ const Browse = () => {
       const newHasMore = existingUploads.length === PAGE_SIZE;
       setHasMore(newHasMore);
       
-      // ⚡ **AND THIS LOG** ⚡
       console.log(
-        `After page ${page}, uploads.length=${uploads.length + existingUploads.length}, hasMore=${newHasMore}`
+        `   📈 Total uploads now: ${uploads.length + existingUploads.length}, hasMore=${newHasMore}`
       );
     } catch (error) {
       console.error('Error fetching uploads:', error);
