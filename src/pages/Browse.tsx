@@ -79,17 +79,30 @@ const Browse = () => {
     };
   }, []);
 
-  // Reset pagination when search term changes
+  // Handle search term changes and pagination
   useEffect(() => {
-    setUploads([]);
-    setPage(0);
-    setHasMore(true);
+    // When searchTerm changes, reset everything and fetch from page 0
+    if (searchTerm) {
+      console.log(`🔎 Search term changed to "${searchTerm}" - resetting pagination`);
+      setUploads([]);
+      setPage(0);
+      setHasMore(true);
+      fetchUploads();
+    } else {
+      // Initial load or when search is cleared
+      fetchUploads();
+    }
   }, [searchTerm]);
 
-  // Fetch uploads when page or search term changes
+  // Fetch more uploads when page changes (but not when searchTerm changes)
   useEffect(() => {
-    fetchUploads();
-  }, [page, searchTerm]);
+    // Only fetch if page changed but searchTerm didn't
+    // This prevents double fetching when searchTerm changes
+    if (page > 0) {
+      console.log(`📄 Page changed to ${page} - fetching more results`);
+      fetchUploads();
+    }
+  }, [page]);
 
   const fetchUploads = async () => {
     console.log(`🔍 fetchUploads called (searchTerm="${searchTerm}", page=${page})`);
@@ -162,15 +175,27 @@ const Browse = () => {
           .in('id', missingFileIds);
       }
 
-      // Append new uploads to existing ones
-      setUploads(prev => [...prev, ...existingUploads]);
+      // If this is page 0 and we're searching, replace uploads
+      // Otherwise append new uploads to existing ones
+      if (page === 0 && searchTerm) {
+        console.log(` → Search results for "${searchTerm}": setting ${existingUploads.length} uploads`);
+        setUploads(existingUploads);
+      } else {
+        console.log(` → Appending ${existingUploads.length} uploads to existing ${uploads.length}`);
+        setUploads(prev => [...prev, ...existingUploads]);
+      }
       
       // Determine if there are more pages
       const newHasMore = existingUploads.length === PAGE_SIZE;
       setHasMore(newHasMore);
       
+      // Calculate the correct total based on whether we're replacing or appending
+      const newTotal = (page === 0 && searchTerm) 
+        ? existingUploads.length 
+        : uploads.length + existingUploads.length;
+        
       console.log(
-        ` → After page ${page}: totalUploads=${uploads.length + existingUploads.length}, hasMore=${newHasMore}`
+        ` → After page ${page}: totalUploads=${newTotal}, hasMore=${newHasMore}`
       );
     } catch (error) {
       console.error('Error fetching uploads:', error);
