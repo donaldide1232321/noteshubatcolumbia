@@ -124,21 +124,24 @@ const Browse = () => {
       );
 
       // Check if files exist in storage and collect IDs of missing files
-      const [existingUploads, missingFileIds] = await validUploads.reduce(async (promiseAcc, upload) => {
-        const [existing, missing] = await promiseAcc;
-        const { data } = await supabase
-          .storage
-          .from('uploads')
-          .list(upload.file_url.split('/')[0], {
-            search: upload.file_url.split('/')[1]
-          });
-        
-        if (data && data.length > 0) {
-          return [[...existing, upload], missing];
-        } else {
-          return [existing, [...missing, upload.id]];
-        }
-      }, Promise.resolve([[] as Upload[], [] as string[]]));
+      const [existingUploads, missingFileIds] = await validUploads.reduce(
+        async (promiseAcc, upload) => {
+          const [existing, missing] = await promiseAcc;
+          const { data: storageData } = await supabase
+            .storage
+            .from('uploads')
+            .list(upload.file_url.split('/')[0], {
+              search: upload.file_url.split('/')[1]
+            });
+          
+          if (storageData && storageData.length > 0) {
+            return [[...existing, upload], missing];
+          } else {
+            return [existing, [...missing, upload.id]];
+          }
+        },
+        Promise.resolve([[] as Upload[], [] as string[]])
+      );
 
       // Clean up database records for missing files
       if (missingFileIds.length > 0) {
@@ -149,13 +152,22 @@ const Browse = () => {
           .in('id', missingFileIds);
       }
 
+      // ⚡ **INSERT THIS LOG** ⚡
+      console.log(
+        `Fetched page ${page}: returned ${existingUploads.length} rows (PAGE_SIZE=${PAGE_SIZE})`
+      );
+
       // Append new uploads to existing ones
       setUploads(prev => [...prev, ...existingUploads]);
       
-      // Check if we have more data
-      if (existingUploads.length < PAGE_SIZE) {
-        setHasMore(false);
-      }
+      // Determine if there are more pages
+      const newHasMore = existingUploads.length === PAGE_SIZE;
+      setHasMore(newHasMore);
+      
+      // ⚡ **AND THIS LOG** ⚡
+      console.log(
+        `After page ${page}, uploads.length=${uploads.length + existingUploads.length}, hasMore=${newHasMore}`
+      );
     } catch (error) {
       console.error('Error fetching uploads:', error);
       setError('Failed to load study materials. Please try again later.');
