@@ -11,6 +11,9 @@ import { supabase } from '@/integrations/supabase/client';
 import EditUploadDialog from '@/components/EditUploadDialog';
 import Footer from '../components/Footer';
 
+// How many items per "page"
+const PAGE_SIZE = 12;
+
 interface Upload {
   id: string;
   user_id: string;
@@ -36,15 +39,17 @@ const Browse = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [uploads, setUploads] = useState<Upload[]>([]);
-  const [filteredUploads, setFilteredUploads] = useState<Upload[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [userVotes, setUserVotes] = useState<Record<string, 'up' | 'down'>>({});
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [visibleCount, setVisibleCount] = useState(12);
+  
+  // Pagination state
+  const [page, setPage] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
 
+  // Set up real-time subscription and fetch user votes
   useEffect(() => {
-    fetchUploads();
     fetchUserVotes();
 
     // Set up real-time subscription
@@ -58,7 +63,10 @@ const Browse = () => {
         }, 
         (payload) => {
           console.log('Real-time update:', payload);
-          fetchUploads(); // Refresh the uploads list
+          // Reset pagination and fetch first page
+          setUploads([]);
+          setPage(0);
+          setHasMore(true);
         }
       )
       .subscribe();
@@ -69,15 +77,42 @@ const Browse = () => {
     };
   }, []);
 
+  // Reset pagination when search term changes
+  useEffect(() => {
+    setUploads([]);
+    setPage(0);
+    setHasMore(true);
+  }, [searchTerm]);
+
+  // Fetch uploads when page or search term changes
+  useEffect(() => {
+    fetchUploads();
+  }, [page, searchTerm]);
+
   const fetchUploads = async () => {
     try {
       setIsLoading(true);
       setError(null);
       
-      const { data, error } = await supabase
+      // Calculate range for pagination
+      const from = page * PAGE_SIZE;
+      const to = from + PAGE_SIZE - 1;
+      
+      // Build query
+      let query = supabase
         .from('uploads')
         .select('*')
         .order('upload_date', { ascending: false });
+      
+      // Add search filters if needed
+      if (searchTerm) {
+        query = query.or(
+          `course.ilike.%${searchTerm}%,professor.ilike.%${searchTerm}%,label.ilike.%${searchTerm}%`
+        );
+      }
+      
+      // Apply pagination
+      const { data, error } = await query.range(from, to);
 
       if (error) {
         throw error;
@@ -114,8 +149,13 @@ const Browse = () => {
           .in('id', missingFileIds);
       }
 
-      setUploads(existingUploads);
-      setFilteredUploads(existingUploads);
+      // Append new uploads to existing ones
+      setUploads(prev => [...prev, ...existingUploads]);
+      
+      // Check if we have more data
+      if (existingUploads.length < PAGE_SIZE) {
+        setHasMore(false);
+      }
     } catch (error) {
       console.error('Error fetching uploads:', error);
       setError('Failed to load study materials. Please try again later.');
@@ -150,27 +190,13 @@ const Browse = () => {
     }
   };
 
-  useEffect(() => {
-    let filtered = uploads;
-
-    if (searchTerm) {
-      filtered = filtered.filter(upload =>
-        upload.course.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        upload.professor.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        upload.label.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    }
-
-    setFilteredUploads(filtered);
-    // Reset visible count when search term changes
-    setVisibleCount(12);
-  }, [uploads, searchTerm]);
-
   const handleVote = async (uploadId: string, voteType: 'up' | 'down') => {
     if (!user) return;
 
     try {
       const currentVote = userVotes[uploadId];
+      const upload = uploads.find(u => u.id === uploadId);
+      if (!upload) return;
       
       if (currentVote === voteType) {
         // Remove vote
@@ -184,7 +210,7 @@ const Browse = () => {
         const field = voteType === 'up' ? 'upvotes' : 'downvotes';
         await supabase
           .from('uploads')
-          .update({ [field]: uploads.find(u => u.id === uploadId)?.[field]! - 1 })
+          .update({ [field]: upload[field] - 1 })
           .eq('id', uploadId);
 
         setUserVotes(prev => {
@@ -192,6 +218,15 @@ const Browse = () => {
           delete newVotes[uploadId];
           return newVotes;
         });
+        
+        // Update local state
+        setUploads(prev => 
+          prev.map(u => 
+            u.id === uploadId 
+              ? { ...u, [field]: u[field] - 1 } 
+              : u
+          )
+        );
       } else {
         // Add or update vote
         await supabase
@@ -202,37 +237,40 @@ const Browse = () => {
             vote_type: voteType
           });
 
-        // Update vote counts
-        const upload = uploads.find(u => u.id === uploadId);
-        if (upload) {
-          let newUpvotes = upload.upvotes;
-          let newDownvotes = upload.downvotes;
+        // Calculate new vote counts
+        let newUpvotes = upload.upvotes;
+        let newDownvotes = upload.downvotes;
 
-          // Remove previous vote if exists
-          if (currentVote === 'up') {
-            newUpvotes--;
-          } else if (currentVote === 'down') {
-            newDownvotes--;
-          }
-
-          // Add new vote
-          if (voteType === 'up') {
-            newUpvotes++;
-          } else {
-            newDownvotes++;
-          }
-
-          await supabase
-            .from('uploads')
-            .update({ upvotes: newUpvotes, downvotes: newDownvotes })
-            .eq('id', uploadId);
+        // Remove previous vote if exists
+        if (currentVote === 'up') {
+          newUpvotes--;
+        } else if (currentVote === 'down') {
+          newDownvotes--;
         }
 
-        setUserVotes(prev => ({ ...prev, [uploadId]: voteType }));
-      }
+        // Add new vote
+        if (voteType === 'up') {
+          newUpvotes++;
+        } else {
+          newDownvotes++;
+        }
 
-      // Refresh uploads
-      fetchUploads();
+        await supabase
+          .from('uploads')
+          .update({ upvotes: newUpvotes, downvotes: newDownvotes })
+          .eq('id', uploadId);
+
+        setUserVotes(prev => ({ ...prev, [uploadId]: voteType }));
+        
+        // Update local state
+        setUploads(prev => 
+          prev.map(u => 
+            u.id === uploadId 
+              ? { ...u, upvotes: newUpvotes, downvotes: newDownvotes } 
+              : u
+          )
+        );
+      }
     } catch (error) {
       console.error('Error handling vote:', error);
       toast({ title: "Error updating vote", variant: "destructive" });
@@ -395,21 +433,22 @@ const Browse = () => {
 
         {/* Main Content */}
         <div>
-          {isLoading ? (
+          {/* If loading first page, show loading spinner */}
+          {isLoading && page === 0 ? (
             <div className="text-center py-12">
               <div className="animate-spin inline-block w-8 h-8 border-4 border-current border-t-transparent text-columbia-blue rounded-full" />
               <p className="mt-4 text-gray-600">Loading study materials...</p>
             </div>
-          ) : filteredUploads.length === 0 ? (
+          ) : uploads.length === 0 && !isLoading ? (
             <div className="text-center py-12">
               <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl">📚</span>
               </div>
               <h3 className="text-lg font-semibold text-gray-900 mb-2">No materials found</h3>
               <p className="text-gray-600 mb-4">
-                {uploads.length === 0 
-                  ? "Be the first to upload some study materials!" 
-                  : "Try adjusting your search criteria"}
+                {searchTerm 
+                  ? `No materials match "${searchTerm}"`
+                  : "Be the first to upload some study materials!"}
               </p>
               <Button 
                 onClick={() => navigate('/upload')}
@@ -421,7 +460,7 @@ const Browse = () => {
           ) : (
             <>
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                {filteredUploads.slice(0, visibleCount).map(item => (
+                {uploads.map(item => (
                   <Card key={item.id} className="hover:shadow-lg transition-shadow">
                     <CardHeader className="pb-3">
                       <div className="flex justify-between items-start">
@@ -454,7 +493,12 @@ const Browse = () => {
                             <EditUploadDialog 
                               upload={item} 
                               currentUserId={user.id} 
-                              onUpdate={fetchUploads} 
+                              onUpdate={() => {
+                                // Reset pagination and fetch first page
+                                setUploads([]);
+                                setPage(0);
+                                setHasMore(true);
+                              }} 
                             />
                           </div>
                         )}
@@ -501,16 +545,24 @@ const Browse = () => {
               </div>
               
               {/* Load More Button */}
-              {filteredUploads.length > visibleCount && (
+              {hasMore && (
                 <div className="flex justify-center mt-8">
                   <Button 
-                    onClick={() => setVisibleCount(prev => prev + 12)}
+                    onClick={() => setPage(prev => prev + 1)}
                     variant="outline"
                     className="px-6"
+                    disabled={isLoading}
                   >
-                    Load More
+                    {isLoading ? 'Loading...' : 'Load More'}
                   </Button>
                 </div>
+              )}
+              
+              {/* No more results message */}
+              {!hasMore && uploads.length > 0 && (
+                <p className="text-center mt-8 text-gray-500">
+                  No more materials to load.
+                </p>
               )}
             </>
           )}
