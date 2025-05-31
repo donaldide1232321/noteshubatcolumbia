@@ -41,6 +41,7 @@ const Browse = () => {
   const [userVotes, setUserVotes] = useState<Record<string, 'up' | 'down'>>({});
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [visibleCount, setVisibleCount] = useState(12);
 
   useEffect(() => {
     fetchUploads();
@@ -161,6 +162,8 @@ const Browse = () => {
     }
 
     setFilteredUploads(filtered);
+    // Reset visible count when search term changes
+    setVisibleCount(12);
   }, [uploads, searchTerm]);
 
   const handleVote = async (uploadId: string, voteType: 'up' | 'down') => {
@@ -416,85 +419,100 @@ const Browse = () => {
               </Button>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-              {filteredUploads.map(item => (
-                <Card key={item.id} className="hover:shadow-lg transition-shadow">
-                  <CardHeader className="pb-3">
-                    <div className="flex justify-between items-start">
-                      <div className="flex-1">
-                        <CardTitle className="text-lg line-clamp-2">{item.course}</CardTitle>
-                        <p className="text-sm text-gray-600 mt-1">Prof. {item.professor}</p>
-                      </div>
-                      <Badge className={getFileTypeColor(item.file_type)}>
-                        {item.file_type}
-                      </Badge>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-3">
-                      <p className="font-medium text-gray-900">{item.label}</p>
-                      <p className="text-sm text-gray-500">📄 {item.file_name}</p>
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-1 text-sm text-gray-500">
-                          <User className="h-4 w-4" />
-                          <span>{item.username}</span>
+            <>
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                {filteredUploads.slice(0, visibleCount).map(item => (
+                  <Card key={item.id} className="hover:shadow-lg transition-shadow">
+                    <CardHeader className="pb-3">
+                      <div className="flex justify-between items-start">
+                        <div className="flex-1">
+                          <CardTitle className="text-lg line-clamp-2">{item.course}</CardTitle>
+                          <p className="text-sm text-gray-600 mt-1">Prof. {item.professor}</p>
                         </div>
-                        <p className="text-xs text-gray-400">
-                          {new Date(item.upload_date).toLocaleDateString()}
-                        </p>
+                        <Badge className={getFileTypeColor(item.file_type)}>
+                          {item.file_type}
+                        </Badge>
                       </div>
-                      
-                      {/* Edit/Delete options for user's own uploads */}
-                      {user && item.user_id === user.id && (
-                        <div className="pt-2 border-t">
-                          <EditUploadDialog 
-                            upload={item} 
-                            currentUserId={user.id} 
-                            onUpdate={fetchUploads} 
-                          />
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-3">
+                        <p className="font-medium text-gray-900">{item.label}</p>
+                        <p className="text-sm text-gray-500">📄 {item.file_name}</p>
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center space-x-1 text-sm text-gray-500">
+                            <User className="h-4 w-4" />
+                            <span>{item.username}</span>
+                          </div>
+                          <p className="text-xs text-gray-400">
+                            {new Date(item.upload_date).toLocaleDateString()}
+                          </p>
                         </div>
-                      )}
-                      
-                      <div className="flex items-center justify-between pt-2 border-t">
-                        <div className="flex items-center space-x-4">
-                          <button
-                            onClick={() => handleVote(item.id, 'up')}
-                            className={`flex items-center space-x-1 px-2 py-1 rounded transition-colors ${
-                              userVotes[item.id] === 'up' 
-                                ? 'bg-green-100 text-green-700' 
-                                : 'hover:bg-gray-100'
-                            }`}
+                        
+                        {/* Edit/Delete options for user's own uploads */}
+                        {user && item.user_id === user.id && (
+                          <div className="pt-2 border-t">
+                            <EditUploadDialog 
+                              upload={item} 
+                              currentUserId={user.id} 
+                              onUpdate={fetchUploads} 
+                            />
+                          </div>
+                        )}
+                        
+                        <div className="flex items-center justify-between pt-2 border-t">
+                          <div className="flex items-center space-x-4">
+                            <button
+                              onClick={() => handleVote(item.id, 'up')}
+                              className={`flex items-center space-x-1 px-2 py-1 rounded transition-colors ${
+                                userVotes[item.id] === 'up' 
+                                  ? 'bg-green-100 text-green-700' 
+                                  : 'hover:bg-gray-100'
+                              }`}
+                            >
+                              <span>👍</span>
+                              <span className="text-sm">{item.upvotes}</span>
+                            </button>
+                            <button
+                              onClick={() => handleVote(item.id, 'down')}
+                              className={`flex items-center space-x-1 px-2 py-1 rounded transition-colors ${
+                                userVotes[item.id] === 'down' 
+                                  ? 'bg-red-100 text-red-700' 
+                                  : 'hover:bg-gray-100'
+                              }`}
+                            >
+                              <span>👎</span>
+                              <span className="text-sm">{item.downvotes}</span>
+                            </button>
+                          </div>
+                          <Button 
+                            size="sm" 
+                            variant="outline"
+                            onClick={() => handleDownload(item)}
+                            className="flex items-center gap-1"
                           >
-                            <span>👍</span>
-                            <span className="text-sm">{item.upvotes}</span>
-                          </button>
-                          <button
-                            onClick={() => handleVote(item.id, 'down')}
-                            className={`flex items-center space-x-1 px-2 py-1 rounded transition-colors ${
-                              userVotes[item.id] === 'down' 
-                                ? 'bg-red-100 text-red-700' 
-                                : 'hover:bg-gray-100'
-                            }`}
-                          >
-                            <span>👎</span>
-                            <span className="text-sm">{item.downvotes}</span>
-                          </button>
+                            <Download className="h-4 w-4" />
+                            Download
+                          </Button>
                         </div>
-                        <Button 
-                          size="sm" 
-                          variant="outline"
-                          onClick={() => handleDownload(item)}
-                          className="flex items-center gap-1"
-                        >
-                          <Download className="h-4 w-4" />
-                          Download
-                        </Button>
                       </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+              
+              {/* Load More Button */}
+              {filteredUploads.length > visibleCount && (
+                <div className="flex justify-center mt-8">
+                  <Button 
+                    onClick={() => setVisibleCount(prev => prev + 12)}
+                    variant="outline"
+                    className="px-6"
+                  >
+                    Load More
+                  </Button>
+                </div>
+              )}
+            </>
           )}
         </div>
       </main>
