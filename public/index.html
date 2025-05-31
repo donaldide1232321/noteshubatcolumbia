@@ -1,33 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   <title>Columbia Notes Hub</title>
-  <script type="text/javascript">
-    // This script helps with hash-based routing for GitHub Pages
-    // It ensures that direct navigation to routes works correctly
-    
-    // Check if we need to redirect to a specific hash route
-    (function() {
-      // If we're at the root with no hash, we're already at the home page
-      if (window.location.pathname.endsWith('/noteshubatcolumbia/') && !window.location.hash) {
-        // No need to redirect, we're at the home page
-        return;
-      }
-      
-      // Check for specific routes in the path
-      var path = window.location.pathname;
-      
-      if (path.includes('/browse')) {
-        window.location.replace('/noteshubatcolumbia/#/browse');
-      } else if (path.includes('/upload')) {
-        window.location.replace('/noteshubatcolumbia/#/upload');
-      }
-    })();
-  </script>
+
+  <!-- Hash router script for GitHub Pages (relative path) -->
+  <script type="text/javascript" src="hash-router.js"></script>
+
+  <!-- Favicon & touch icon (no leading slash) -->
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="apple-touch-icon" href="favicon.svg" />
+
+  <!-- Your custom meta tags (link preview) go here: -->
+  <!-- HTML Meta Tags -->
+  <title>NotesHub @Columbia</title>
+  <meta name="description" content="Share and discover academic materials at Columbia University" />
+
+  <!-- Facebook Meta Tags -->
+  <meta property="og:url" content="https://noteshubcolumbia.com/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="NotesHub @Columbia" />
+  <meta property="og:description" content="Share and discover academic materials at Columbia University" />
+  <meta property="og:image" content="https://ik.imagekit.io/1qqkcce6i/image.png?updatedAt=1748646512381" />
+
+  <!-- Twitter Meta Tags -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta property="twitter:url" content="https://noteshubcolumbia.com/" />
+  <meta name="twitter:title" content="NotesHub @Columbia" />
+  <meta name="twitter:description" content="Share and discover academic materials at Columbia University" />
+  <meta name="twitter:image" content="https://ik.imagekit.io/1qqkcce6i/image.png?updatedAt=1748646512381" />
+
+  <!-- End of custom meta tags -->
+
+  <!-- Vite will automatically inject its CSS and JS at build time,
+       and because you set `base: './'` in vite.config.ts, paths will be relative. -->
 </head>
 <body>
-  <!-- This file is only used for GitHub Pages routing and will be replaced by the actual index.html during build -->
-  <p>Loading Columbia Notes Hub...</p>
+  <div id="root"></div>
+  <!-- Vite injects its compiled JS bundle here (relative path) -->
+  <script type="module" src="index.js"></script>
 </body>
 </html>
