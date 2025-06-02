@@ -86,14 +86,103 @@ const Browse = () => {
     setUploads([]); // Always clear uploads when search term changes
     setPage(0);     // Always reset to page 0
     setHasMore(true);
-    // fetchUploads will be called by the page effect below
+    
+    // Immediately fetch with the new search term and page 0
+    const fetchWithNewSearch = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+        
+        // Build query with pagination applied first (page 0)
+        let query = supabase
+          .from('uploads')
+          .select('*')
+          .order('upload_date', { ascending: false })
+          .range(0, PAGE_SIZE - 1);  // Always start from page 0
+        
+        // Add search filters if needed
+        if (searchTerm) {
+          query = query.or(
+            `course.ilike.%${searchTerm}%,professor.ilike.%${searchTerm}%,label.ilike.%${searchTerm}%`
+          );
+        }
+        
+        // Execute the query
+        const { data, error } = await query;
+        
+        console.log(
+          ` → Supabase query for range 0–${PAGE_SIZE - 1} returned`, 
+          data?.length, 
+          'row(s):', 
+          data
+        );
+
+        if (error) {
+          throw error;
+        }
+
+        // Filter out any null or undefined entries
+        const validUploads = (data || []).filter(upload => 
+          upload && upload.id && upload.file_url
+        );
+
+        // Check if files exist in storage
+        const existingUploads = [];
+        const missingFileIds = [];
+
+        for (const upload of validUploads) {
+          try {
+            const { data: fileData, error: fileError } = await supabase.storage
+              .from('uploads')
+              .list('', { search: upload.file_url });
+
+            if (fileError || !fileData || fileData.length === 0) {
+              missingFileIds.push(upload.id);
+            } else {
+              existingUploads.push(upload);
+            }
+          } catch (error) {
+            console.error(`Error checking file ${upload.file_url}:`, error);
+            missingFileIds.push(upload.id);
+          }
+        }
+
+        // Remove uploads with missing files from database
+        if (missingFileIds.length > 0) {
+          console.log(`Removing ${missingFileIds.length} uploads with missing files`);
+          await supabase
+            .from('uploads')
+            .delete()
+            .in('id', missingFileIds);
+        }
+
+        // Set the uploads (replace completely since this is page 0)
+        console.log(` → Setting ${existingUploads.length} uploads for search "${searchTerm || 'empty'}"`);
+        setUploads(existingUploads);
+        
+        // Determine if there are more pages
+        const newHasMore = existingUploads.length === PAGE_SIZE;
+        setHasMore(newHasMore);
+        
+        console.log(` → After search reset: totalUploads=${existingUploads.length}, hasMore=${newHasMore}`);
+      } catch (error) {
+        console.error('Error fetching uploads:', error);
+        setError('Failed to load study materials. Please try again.');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    fetchWithNewSearch();
   }, [searchTerm]);
 
-  // Fetch uploads when page changes or on initial load
+  // Fetch more uploads when page changes (but only for page > 0)
   useEffect(() => {
-    console.log(`📄 Fetching uploads for page ${page} with search term "${searchTerm || 'empty'}"`);
-    fetchUploads();
-  }, [page, searchTerm]);
+    if (page > 0) {
+      console.log(`📄 Loading more results for page ${page}`);
+      fetchUploads();
+    }
+  }, [page]);
 
   const fetchUploads = async () => {
     console.log(`🔍 fetchUploads called (searchTerm="${searchTerm}", page=${page})`);
