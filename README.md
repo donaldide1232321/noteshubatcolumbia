@@ -1,6 +1,6 @@
 <h1>DESCRIPTION</h1>
 
-A full-stack, public‐access notes‐sharing platform built with modern web tools and a serverless backend. Students can instantly upload, browse, and download study materials without ever needing to log in. This project showcases expertise in frontend engineering, RESTful API integration, and static‐site deployment strategies—everything you need to build a polished, real-world application.
+A full-stack, public‐access notes‐sharing platform built with modern web tools and a serverless backend. Students can instantly upload, browse, and download study materials without ever needing to log in. 
 
 <h1>KEY FEATURES:</h1>
 <ul> 
